@@ -1,4 +1,5 @@
 #include "video.hpp"
+
 /**
  * Program that implements methods of tracking
  *
@@ -6,6 +7,6 @@
  * @author : Daniel Santos
  */
 int main() {
-    Start();
-    return 0;
+	Start();
+	return 0;
 }

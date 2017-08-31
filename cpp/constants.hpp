@@ -1,6 +1,8 @@
 #include <string>
+
 using namespace std;
-string  INSTRUCTIONS = "    Hello User!!! \n \
+string INSTRUCTIONS =
+    "    Hello User!!! \n \
     I'm daniel this software track an object in \n\
     video in real time. \n \
 	\n \
@@ -16,7 +18,6 @@ string  INSTRUCTIONS = "    Hello User!!! \n \
     S           Activate tracking method 3\n\
     M           Visualize tracking methods\n\
     F           Follow the track object\n";
-
 
 string const WINDOW_NAME = "Tracking";
 string const CAMERA_LAPTOP = "0";
