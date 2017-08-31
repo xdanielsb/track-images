@@ -12,6 +12,7 @@ using namespace std;
 typedef vector < Point > vp;
 typedef vector < vp  > vvp;
 typedef vector < Vec4i > v4;
+typedef vector < KeyPoint > vkp;
 
 
 void toGrayI(Mat  src, Mat &dst){

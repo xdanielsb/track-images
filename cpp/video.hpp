@@ -2,6 +2,7 @@
 #include <opencv2/core/mat.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/highgui/highgui_c.h>
+#include <opencv2/nonfree/features2d.hpp>
 #include <stdio.h>
 #include <iostream>
 #include <string>
@@ -18,8 +19,9 @@ using namespace std;
  */
 int NUM_IMAGE = 0;
 bool DEBUG = false;
-bool TRACKING = false;
+bool MOVEMENT = false;
 bool PAUSED = false;
+bool SURFM = true;
 int THRESH_VALUE = 50;
 
 int displayOptions(Mat frame) {
@@ -35,11 +37,11 @@ int displayOptions(Mat frame) {
 		fflush(stdout);
 	} else if (key == 'd' || key == 'D') {
 		DEBUG = !DEBUG;
-		printf(DEBUG ? "DEBUG Mode Enable\n" : "DEBUG Mode Disabled\n");
+		printf(DEBUG ? "Debug mode Enable\n" : "DEBUG Mode Disabled\n");
 		fflush(stdout);
 	} else if (key == 't' || key == 'T') {
-		TRACKING = !TRACKING;
-		printf(TRACKING ? "TRACKING Mode Enable\n" : "TRACKING Mode Disabled\n");
+		MOVEMENT = !MOVEMENT;
+		printf(MOVEMENT ? "MOVEMENT Mode Enable\n" : "MOVEMENT Mode Disabled\n");
 		fflush(stdout);
 	} else if (key == 'p' || key == 'P') {
 		PAUSED = !PAUSED;
@@ -55,7 +57,9 @@ void showFrame(string WINDOW_NAME, Mat frame) {
 
 void Start() {
 
+	Mat trainingImg = imread("img/training.png", CV_LOAD_IMAGE_GRAYSCALE );
 	VideoCapture capture(CAMERA_LAPTOP);
+
 
 	if (!capture.isOpened()) {
 		capture.open(CAMERA_LAPTOP);
@@ -76,7 +80,8 @@ void Start() {
 		capture.read(frame1);
 		capture.read(frame2);
 
-		if (TRACKING) {
+		//Detect movement
+		if (MOVEMENT) {
 			toGrayI(frame1, grayImg1);
 			toGrayI(frame2, grayImg2);
 
@@ -93,6 +98,18 @@ void Start() {
 			if (contours.size() > 0) {
 				printf("The number of contours detected is: %d\n", contours.size());
 			}
+		}
+
+
+
+		if (SURFM) {
+			SurfFeatureDetector detector(400);
+			vkp kpObject, kpScene;
+
+
+			detector.detect(trainingImg, kpObject);
+			detector.detect(frame1, kpScene);
+
 		}
 
 		if (!PAUSED) {
