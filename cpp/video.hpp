@@ -2,12 +2,10 @@
 #include <opencv2/core/mat.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/highgui/highgui_c.h>
-#include <opencv2/imgproc.hpp>
-
 #include <stdio.h>
-#include <cstdlib>
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "constants.hpp"
 #include "util.hpp"
@@ -69,23 +67,38 @@ void Start() {
 
 	namedWindow(WINDOW_NAME, CV_WINDOW_KEEPRATIO);
 
-	Mat frame1, frame2, grayImg, diffImg, threshImg;
+	Mat frame1, frame2, grayImg1, grayImg2;
+	Mat temp, diffImg, threshImg, blurImg;
+	;
 	printf("%s", INSTRUCTIONS.c_str());
 	fflush(stdout);
 	for (;;) {
 		capture.read(frame1);
 		capture.read(frame2);
 
-		toGray(frame1, grayImg);
-		diff(frame2, frame1, diffImg);
-		thresh(diffImg, threshImg, THRESH_VALUE);
+		if (TRACKING) {
+			toGrayI(frame1, grayImg1);
+			toGrayI(frame2, grayImg2);
 
+			diffI(grayImg2, grayImg1, diffImg);
+			threshI(diffImg, threshImg, THRESH_VALUE);
+			blurI(threshImg, blurImg);
 
+			vvp contours;
+			v4 hierarchy;
+
+			threshImg.copyTo(temp);
+			findContoursI(temp, contours, hierarchy);
+
+			if (contours.size() > 0) {
+				printf("The number of contours detected is: %d\n", contours.size());
+			}
+		}
 
 		if (!PAUSED) {
 			if (frame1.empty())
 				break;
-			showFrame(WINDOW_NAME, threshImg);
+			showFrame(WINDOW_NAME, frame1);
 		}
 
 		displayOptions(frame1);
