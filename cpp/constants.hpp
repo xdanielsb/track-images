@@ -22,3 +22,4 @@ string INSTRUCTIONS =
 string const WINDOW_NAME = "Tracking";
 int const CAMERA_LAPTOP = 0;
 int const CAMERA_EXTERN = 1;
+int const MAX_THRESH = 255;

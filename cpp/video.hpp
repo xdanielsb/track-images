@@ -22,6 +22,7 @@ int NUM_IMAGE = 0;
 bool DEBUG = false;
 bool TRACKING = false;
 bool PAUSED = false;
+int THRESH_VALUE = 50;
 
 int displayOptions(Mat frame) {
 	char filename[200];
@@ -68,7 +69,7 @@ void Start() {
 
 	namedWindow(WINDOW_NAME, CV_WINDOW_KEEPRATIO);
 
-	Mat frame1, frame2, grayImg, diffImg;
+	Mat frame1, frame2, grayImg, diffImg, threshImg;
 	printf("%s", INSTRUCTIONS.c_str());
 	fflush(stdout);
 	for (;;) {
@@ -77,13 +78,14 @@ void Start() {
 
 		toGray(frame1, grayImg);
 		diff(frame2, frame1, diffImg);
+		thresh(diffImg, threshImg, THRESH_VALUE);
 
 
 
 		if (!PAUSED) {
 			if (frame1.empty())
 				break;
-			showFrame(WINDOW_NAME, diffImg);
+			showFrame(WINDOW_NAME, threshImg);
 		}
 
 		displayOptions(frame1);

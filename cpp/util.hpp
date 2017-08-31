@@ -12,3 +12,7 @@ void toGray(Mat  src, Mat &dst){
 void diff(Mat src1, Mat src2, Mat &dst){
 	absdiff(src1, src2, dst);
 }
+
+void thresh(Mat src, Mat &dst, double thresh){
+ threshold(src, dst, thresh, MAX_THRESH, THRESH_BINARY);
+}
