@@ -20,5 +20,5 @@ string INSTRUCTIONS =
     F           Follow the track object\n";
 
 string const WINDOW_NAME = "Tracking";
-string const CAMERA_LAPTOP = "0";
-string const CAMERA_EXTERN = "1";
+int const CAMERA_LAPTOP = 0;
+int const CAMERA_EXTERN = 1;

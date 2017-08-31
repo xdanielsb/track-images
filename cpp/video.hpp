@@ -2,12 +2,15 @@
 #include <opencv2/core/mat.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/highgui/highgui_c.h>
+#include <opencv2/imgproc.hpp>
+
 #include <stdio.h>
 #include <cstdlib>
 #include <iostream>
 #include <string>
 
 #include "constants.hpp"
+#include "util.hpp"
 
 using namespace cv;
 using namespace std;
@@ -56,7 +59,7 @@ void Start() {
 	VideoCapture capture(CAMERA_LAPTOP);
 
 	if (!capture.isOpened()) {
-		capture.open(atoi(CAMERA_LAPTOP.c_str()));
+		capture.open(CAMERA_LAPTOP);
 	}
 
 	if (!capture.isOpened()) {
@@ -65,19 +68,25 @@ void Start() {
 
 	namedWindow(WINDOW_NAME, CV_WINDOW_KEEPRATIO);
 
-	Mat frame;
+	Mat frame1, frame2, grayImg, diffImg;
 	printf("%s", INSTRUCTIONS.c_str());
 	fflush(stdout);
 	for (;;) {
-		capture >> frame;
+		capture.read(frame1);
+		capture.read(frame2);
+
+		toGray(frame1, grayImg);
+		diff(frame2, frame1, diffImg);
+
+
 
 		if (!PAUSED) {
-			if (frame.empty())
+			if (frame1.empty())
 				break;
-			showFrame(WINDOW_NAME, frame);
+			showFrame(WINDOW_NAME, diffImg);
 		}
 
-		displayOptions(frame);
+		displayOptions(frame1);
 	}
 
 }
