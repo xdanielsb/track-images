@@ -19,9 +19,9 @@ using namespace std;
  */
 int NUM_IMAGE = 0;
 bool DEBUG = false;
-bool MOVEMENT = true;
+bool MOVEMENT = false;
 bool PAUSED = false;
-bool SURFM = false;
+bool SURFM = true;
 int THRESH_VALUE = 50;
 
 
@@ -58,7 +58,8 @@ void showFrame(string WINDOW_NAME, Mat frame) {
 
 void Start() {
 
-	Mat trainingImg = imread("img/training.png", CV_LOAD_IMAGE_GRAYSCALE);
+	Mat trainingImg = imread("img/trainingImg.png", CV_LOAD_IMAGE_GRAYSCALE);
+	imshow("TRAINING IMAGE", trainingImg);
 	VideoCapture capture(CAMERA_LAPTOP);
 
 	if (!capture.isOpened()) {
@@ -98,15 +99,9 @@ void Start() {
 			if (contours.size() > 0) {
 				printf("The number of contours detected is: %d\n", contours.size());
 			}
-			for (vp vaux : contours) {
-				for (Point aux : vaux) {
-					cout << aux.x << " " << aux.y << endl;
-				}
-			}
 
 			drawContoursI(frame1, contours, hierarchy, YELLOW);
 
-			//plot the points of match in the frame
 		}
 
 		if (SURFM) {
@@ -143,6 +138,7 @@ void Start() {
 			//	printf("Min distance: %f  \n", minDistance);
 
 			//Draw the good matches
+			printf("The number of matches is %d \n", matches.size());
 			vdm goodMatches;
 			for (int i = 0; i < descObject.rows; i++) {
 				double dist = matches[i].distance;
@@ -150,6 +146,13 @@ void Start() {
 					goodMatches.pb(matches[i]);
 			}
 
+			for (DMatch aux : goodMatches){
+				Point2f a = kpScene[aux.trainIdx].pt ;
+				Point2f b = kpScene[aux.queryIdx].pt ;
+				cout <<a.x << " "<< a.y << endl;
+				circle(frame1, Point(a.x, a.y), 3, GREEN, 3);
+				circle(frame1, Point(b.x, b.y), 3, GREEN, 3);
+			}
 		}
 
 		if (!PAUSED) {
