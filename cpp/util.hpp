@@ -42,3 +42,7 @@ void drawContoursI(Mat &image, vvp contours, v4 hierarchy, const Scalar color) {
 		drawContours(image, contours, countourId, color, 2, 8, hierarchy, 0, Point());
 	}
 }
+
+void drawCircle(Mat &dst, Point p, Scalar const color = GREEN, int radius=3, int thickness= 3){
+	circle(dst, p, radius, color, thickness);
+}

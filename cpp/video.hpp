@@ -123,7 +123,7 @@ void Start() {
 			FlannBasedMatcher matcher;
 			vdm matches;
 			matcher.match(descObject, descScene, matches);
-			double maxDistance = 0, minDistance = 100;
+			double maxDistance = 0, minDistance = 300;
 
 			//Compute the max and the min distance
 			for (int i = 0; i < descObject.rows; i++) {
@@ -149,9 +149,9 @@ void Start() {
 			for (DMatch aux : goodMatches){
 				Point2f a = kpScene[aux.trainIdx].pt ;
 				Point2f b = kpScene[aux.queryIdx].pt ;
-				cout <<a.x << " "<< a.y << endl;
-				circle(frame1, Point(a.x, a.y), 3, GREEN, 3);
-				circle(frame1, Point(b.x, b.y), 3, GREEN, 3);
+
+				drawCircle(frame1, Point(a.x, a.y));
+				drawCircle(frame1, Point(b.x, b.y), RED);
 			}
 		}
 
