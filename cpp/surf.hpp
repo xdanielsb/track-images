@@ -18,9 +18,9 @@ vp2 surfI(Mat trainingImg, Mat frame1) {
 
 	//Matching the descriptors using FLANN matcher
 	FlannBasedMatcher matcher;
-	vdm matches;
+	vdm1 matches;
 	matcher.match(descObject, descScene, matches);
-	double maxDistance = 0, minDistance = 300;
+	double maxDistance = 0, minDistance = 50;
 
 	//Compute the max and the min distance
 	for (int i = 0; i < descObject.rows; i++) {
@@ -35,16 +35,19 @@ vp2 surfI(Mat trainingImg, Mat frame1) {
 	//	printf("Min distance: %f  \n", minDistance);
 
 	//Draw the good matches
-	printf("The number of matches is %d \n", matches.size());
-	vdm goodMatches;
+//	printf("surf: The number of matches is %d \n", matches.size());
+	vdm2 goodMatches;
 	for (int i = 0; i < descObject.rows; i++) {
 		double dist = matches[i].distance;
 		if (dist < 3 * minDistance)
-			goodMatches.pb(matches[i]);
+			goodMatches.push(DMatch2(matches[i], dist));
 	}
 	vp2 points;
-	for (DMatch aux : goodMatches) {
-		Point2f a = kpScene[aux.trainIdx].pt;
+	while (!goodMatches.empty()) {
+		DMatch2 aux = goodMatches.top();
+		goodMatches.pop();
+		Point2f a = kpScene[aux.dm.trainIdx].pt;
+
 		//Point2f b = kpScene[aux.queryIdx].pt;
 		points.pb(a);
 	}

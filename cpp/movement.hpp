@@ -20,7 +20,7 @@ pair < vvp, v4>  getMovements(Mat frame1, Mat frame2) {
 	findContoursI(temp, contours, hierarchy);
 
 	if (contours.size() > 0) {
-		printf("The number of contours detected is: %d\n", contours.size());
+		printf("movement: The number of contours detected is: %d\n", contours.size());
 	}
 	return mp(contours, hierarchy);
 }

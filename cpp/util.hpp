@@ -3,17 +3,11 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/highgui/highgui_c.h>
 #include <opencv2/imgproc/imgproc.hpp>
+
+#include "types.hpp"
 using namespace cv;
 using namespace std;
 
-/*
- *  New types
- */
-typedef vector<Point> vp;
-typedef vector<vp> vvp;
-typedef vector<Vec4i> v4;
-typedef vector<KeyPoint> vkp;
-typedef vector<DMatch> vdm;
 
 void toGrayI(Mat src, Mat &dst) {
 	cvtColor(src, dst, COLOR_BGR2GRAY);
@@ -37,12 +31,18 @@ void findContoursI(Mat image, vvp &contours, v4 hierarchy) {
 	    CV_CHAIN_APPROX_SIMPLE);
 }
 
-void drawContoursI(Mat &image, vvp contours, v4 hierarchy, const Scalar color) {
-	for (int countourId = 0; countourId < contours.size(); countourId++) {
+void drawContoursI(Mat &image, InputArrayOfArrays contours, int numElements, const Scalar color , v4 hierarchy = vector<Vec4i>() ) {
+	for (int countourId = 0; countourId < numElements; countourId++) {
+
 		drawContours(image, contours, countourId, color, 2, 8, hierarchy, 0, Point());
 	}
 }
 
 void drawCircle(Mat &dst, Point p, Scalar const color = GREEN, int radius=3, int thickness= 3){
 	circle(dst, p, radius, color, thickness);
+}
+
+void convexHullI(vp points, vp &hull, bool clockwise = false){
+	convexHull(points, hull, clockwise);
+
 }

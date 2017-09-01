@@ -35,3 +35,4 @@ Scalar const CYAN = Scalar(255,255,0);
 Scalar const YELLOW = Scalar(0,255,255);
 
 #define pb push_back
+#define mp make_pair

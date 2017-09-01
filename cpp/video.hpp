@@ -10,6 +10,11 @@
 
 #include "constants.hpp"
 #include "util.hpp"
+#include "surf.hpp" //depend on constants and util
+#include "sift.hpp" //depend on constants and util
+#include "orb.hpp" //depend on constants and util
+
+#include "movement.hpp" //depend on util
 
 using namespace cv;
 using namespace std;
@@ -17,13 +22,16 @@ using namespace std;
 /*
  * Variables
  */
-int NUM_IMAGE = 0;
+unsigned int NUM_IMAGE = 0;
 bool DEBUG = false;
 bool MOVEMENT = false;
 bool PAUSED = false;
-bool SURFM = true;
-int THRESH_VALUE = 50;
 
+bool SURFM = true;
+bool SIFTM = true;
+bool ORBM = true;
+
+unsigned int NUM_POINT_MAX_PLOT = 100;
 
 int displayOptions(Mat frame) {
 	char filename[200];
@@ -56,14 +64,36 @@ void showFrame(string WINDOW_NAME, Mat frame) {
 	imshow(WINDOW_NAME, frame);
 }
 
+void displayPointsConvex(vp2 points, Mat &frame1, Scalar const color, Scalar const color2) {
+	vp points2;
+	int lim = NUM_POINT_MAX_PLOT;
+
+	if (points.size() <= NUM_POINT_MAX_PLOT) {
+		lim = points.size();
+	}
+	for (int i = 0; i < lim; i++) {
+		drawCircle(frame1, points[i], color2);
+		points2.pb(Point((int) points[i].x, (int) points[i].y));
+	}
+
+	//get the convex hull
+	vvp hull(1);
+	if (points2.size() > 0) {
+		convexHullI(points2, hull[0]);
+	}
+
+	drawContoursI(frame1, hull, hull.size(), color);
+
+}
+
 void Start() {
 
-	Mat trainingImg = imread("img/trainingImg.png", CV_LOAD_IMAGE_GRAYSCALE);
+	Mat trainingImg = imread("img/trainingImg.png");
 	imshow("TRAINING IMAGE", trainingImg);
-	VideoCapture capture(CAMERA_LAPTOP);
+	VideoCapture capture(CAMERA_EXTERN);
 
 	if (!capture.isOpened()) {
-		capture.open(CAMERA_LAPTOP);
+		capture.open(CAMERA_EXTERN);
 	}
 
 	if (!capture.isOpened()) {
@@ -72,8 +102,7 @@ void Start() {
 
 	namedWindow(WINDOW_NAME, CV_WINDOW_KEEPRATIO);
 
-	Mat frame1, frame2, grayImg1, grayImg2;
-	Mat temp, diffImg, threshImg, blurImg;
+	Mat frame1, frame2;
 	;
 	printf("%s", INSTRUCTIONS.c_str());
 	fflush(stdout);
@@ -83,78 +112,31 @@ void Start() {
 
 		//Detect movement
 		if (MOVEMENT) {
-			toGrayI(frame1, grayImg1);
-			toGrayI(frame2, grayImg2);
-
-			diffI(grayImg2, grayImg1, diffImg);
-			threshI(diffImg, threshImg, THRESH_VALUE);
-			blurI(threshImg, blurImg);
-
-			vvp contours;
-			v4 hierarchy;
-
-			threshImg.copyTo(temp);
-			findContoursI(temp, contours, hierarchy);
-
-			if (contours.size() > 0) {
-				printf("The number of contours detected is: %d\n", contours.size());
-			}
-
-			drawContoursI(frame1, contours, hierarchy, YELLOW);
-
+			pair<vvp, v4> aux = getMovements(frame1, frame2);
+			vvp contours = aux.first;
+			v4 hierarchy = aux.second;
+			drawContoursI(frame1, contours, contours.size(), YELLOW, hierarchy);
 		}
 
+		//Method SURF
 		if (SURFM) {
-			SurfFeatureDetector detector(400);
-			vkp kpObject, kpScene;
-
-			//detect the key points
-			detector.detect(trainingImg, kpObject);
-			detector.detect(frame1, kpScene);
-
-			//detect the descriptors
-			SurfDescriptorExtractor extractor;
-			Mat descObject, descScene;
-
-			extractor.compute(trainingImg, kpObject, descObject);
-			extractor.compute(frame1, kpScene, descScene);
-
-			//Matching the descriptors using FLANN matcher
-			FlannBasedMatcher matcher;
-			vdm matches;
-			matcher.match(descObject, descScene, matches);
-			double maxDistance = 0, minDistance = 300;
-
-			//Compute the max and the min distance
-			for (int i = 0; i < descObject.rows; i++) {
-				double dist = matches[i].distance;
-				if (dist < minDistance)
-					minDistance = dist;
-				if (dist > maxDistance)
-					maxDistance = dist;
-			}
-
-			//	printf("Max distance: %f  \n", maxDistance);
-			//	printf("Min distance: %f  \n", minDistance);
-
-			//Draw the good matches
-			printf("The number of matches is %d \n", matches.size());
-			vdm goodMatches;
-			for (int i = 0; i < descObject.rows; i++) {
-				double dist = matches[i].distance;
-				if (dist < 3 * minDistance)
-					goodMatches.pb(matches[i]);
-			}
-
-			for (DMatch aux : goodMatches){
-				Point2f a = kpScene[aux.trainIdx].pt ;
-				Point2f b = kpScene[aux.queryIdx].pt ;
-
-				drawCircle(frame1, Point(a.x, a.y));
-				drawCircle(frame1, Point(b.x, b.y), RED);
-			}
+			vp2 points = surfI(trainingImg, frame1);
+			displayPointsConvex(points, frame1, RED, RED);
 		}
 
+		//Method SIFT
+		if (SIFTM) {
+			vp2 points = siftI(trainingImg, frame1);
+			displayPointsConvex(points, frame1, BLUE, BLUE);
+		}
+
+		//Method ORB
+		if (ORBM) {
+			vp2 points =  orbI(trainingImg, frame1);
+			displayPointsConvex(points, frame1, YELLOW, YELLOW);
+		}
+
+		//Pause
 		if (!PAUSED) {
 			if (frame1.empty())
 				break;
