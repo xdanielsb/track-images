@@ -13,6 +13,11 @@ void toGrayI(Mat src, Mat &dst) {
 	cvtColor(src, dst, COLOR_BGR2GRAY);
 }
 
+void toHSV(Mat src, Mat &dst){
+	cvtColor(src, dst, COLOR_BGR2HSV);
+}
+
+
 void diffI(Mat src1, Mat src2, Mat &dst) {
 	absdiff(src1, src2, dst);
 }
