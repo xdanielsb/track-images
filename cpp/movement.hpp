@@ -18,9 +18,9 @@ pair < vvp, v4>  getMovements(Mat frame1, Mat frame2) {
 
 	threshImg.copyTo(temp);
 	findContoursI(temp, contours, hierarchy);
-
-	if (contours.size() > 0) {
-		printf("movement: The number of contours detected is: %d\n", contours.size());
+  int numContours = contours.size();
+	if ( numContours > 0) {
+		printf("movement: The number of contours detected is: %d\n", numContours);
 	}
 	return mp(contours, hierarchy);
 }

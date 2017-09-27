@@ -10,7 +10,7 @@ string INSTRUCTIONS =
 	\n \
     Commands \n \
     Key         Function\n\
-    T           Tracking\n\
+    M           Movement\n\
     D           Debug Activated\n\
     F           Finish the program\n\
     P           Pause the camera\n\
