@@ -1,6 +1,6 @@
 #include <opencv2/nonfree/features2d.hpp>
 
-vp2 siftI(Mat trainingImg, Mat frame1) {
+vp2 siftIM(Mat trainingImg, Mat frame1) {
 
 	SiftFeatureDetector detector(100);
 	vkp kpObject, kpScene;

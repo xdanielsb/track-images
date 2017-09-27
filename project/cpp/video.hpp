@@ -15,12 +15,12 @@
 #include "sift.hpp" //depend on constants and util
 #include "orb.hpp" //depend on constants and util
 #include "brief.hpp" //depend on constants and util
+#include "descriptorExtractor.hpp" //depend on constants and util
 
 #include "movement.hpp" //depend on util
 
 using namespace cv;
 using namespace std;
-
 /*
  * Variables
  */
@@ -29,10 +29,10 @@ bool DEBUG = false;
 bool MOVEMENT = false;
 bool PAUSED = false;
 
-bool SURFM = true;
-bool SIFTM = true;
-bool ORBM = true;
-bool BRIEFM = true;
+bool SURFM = false;
+bool SIFTM = false;
+bool ORBM = false;
+bool BRIEFM = false;
 
 unsigned int NUM_POINT_MAX_PLOT = 	3;
 
@@ -89,10 +89,19 @@ void displayPointsConvex(vp2 points, Mat &frame1, Scalar const color, Scalar con
 
 }
 
-void Start() {
+
+void ExtractDescriptors(){
+	Mat trainingImg = imread("img/trainingImg.png");
+	getDescriptor(trainingImg);
+	imshow("TRAINING IMAGE", trainingImg);
+	waitKey(0);
+}
+
+void StartAnalysisOverCamera() {
 
 	Mat trainingImg = imread("img/trainingImg.png");
 	imshow("TRAINING IMAGE", trainingImg);
+
 	VideoCapture capture(CAMERA_EXTERN);
 
 	if (!capture.isOpened()) {
@@ -106,7 +115,7 @@ void Start() {
 	namedWindow(WINDOW_NAME, CV_WINDOW_KEEPRATIO);
 
 	Mat frame1, frame2;
-	;
+
 	printf("%s", INSTRUCTIONS.c_str());
 	fflush(stdout);
 	for (;;) {
@@ -129,7 +138,7 @@ void Start() {
 
 		//Method SIFT
 		if (SIFTM) {
-			vp2 points = siftI(trainingImg, frame1);
+			vp2 points = siftIM(trainingImg, frame1);
 			displayPointsConvex(points, frame1, BLUE, BLUE);
 		}
 
@@ -147,6 +156,7 @@ void Start() {
 		}
 
 		displayOptions(frame1);
+
 	}
 
 }

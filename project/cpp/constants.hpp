@@ -1,7 +1,9 @@
 #include <string>
+#include <iostream>
 #include <opencv2/core/core.hpp>
-
 using namespace std;
+#define endl '\n'
+#define show(x) cout << #x <<  " = " << x << endl;
 using namespace cv;
 string INSTRUCTIONS =
     "    Hello User!!! \n \

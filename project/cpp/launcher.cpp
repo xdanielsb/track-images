@@ -8,6 +8,7 @@
  */
 int main() {
 	//print_version();
-	Start();
+	//StartAnalysisOverCamera();
+	ExtractDescriptors();
 	return 0;
 }
