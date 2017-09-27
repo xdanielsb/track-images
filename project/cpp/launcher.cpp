@@ -1,5 +1,5 @@
 #include "video.hpp"
-#include "opencv_version.hpp"
+//#include "opencv_version.hpp"
 /**
  * Program that implements methods of tracking
  * `pkg-config --libs opencv`
@@ -7,7 +7,7 @@
  * @author : Daniel Santos
  */
 int main() {
-	print_version();
+	//print_version();
 	Start();
 	return 0;
 }

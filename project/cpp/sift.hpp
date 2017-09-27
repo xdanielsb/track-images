@@ -2,7 +2,7 @@
 
 vp2 siftI(Mat trainingImg, Mat frame1) {
 
-	SiftFeatureDetector detector(400);
+	SiftFeatureDetector detector(100);
 	vkp kpObject, kpScene;
 
 	//detect the key points
@@ -15,6 +15,7 @@ vp2 siftI(Mat trainingImg, Mat frame1) {
 
 	extractor.compute(trainingImg, kpObject, descObject);
 	extractor.compute(frame1, kpScene, descScene);
+
 
 	//Matching the descriptors using FLANN matcher
 	FlannBasedMatcher matcher;

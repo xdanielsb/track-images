@@ -124,7 +124,7 @@ void Start() {
 		//Method SURF
 		if (SURFM) {
 			vp2 points = surfI(trainingImg, frame1);
-			displayPointsConvex(points, frame1, RED, RED);
+		//	displayPointsConvex(points, frame1, RED, RED);
 		}
 
 		//Method SIFT
@@ -136,7 +136,7 @@ void Start() {
 		//Method ORB
 		if (ORBM) {
 			vp2 points =  orbI(trainingImg, frame1);
-			displayPointsConvex(points, frame1, YELLOW, YELLOW);
+		//	displayPointsConvex(points, frame1, YELLOW, YELLOW);
 		}
 
 		//Pause
