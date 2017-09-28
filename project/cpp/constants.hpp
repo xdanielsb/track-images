@@ -3,6 +3,7 @@
 #include <opencv2/core/core.hpp>
 using namespace std;
 #define endl '\n'
+#define INF 1e10
 #define show(x) cout << #x <<  " = " << x << endl;
 using namespace cv;
 string INSTRUCTIONS =

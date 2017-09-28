@@ -15,8 +15,7 @@
 
 #include "surf.hpp" //depend on constants util, matchers
 #include "sift.hpp" //depend on constants, util, matchers
-#include "orb.hpp" //depend on constants and util
-#include "brief.hpp" //depend on constants and util
+#include "orb.hpp" //depend on constants and util, matcher
 #include "descriptorExtractor.hpp" //depend on constants and util
 
 #include "movement.hpp" //depend on util
@@ -36,7 +35,7 @@ bool SIFTM = true;
 bool ORBM = true;
 bool BRIEFM = true;
 
-unsigned int NUM_POINT_MAX_PLOT = 	3;
+unsigned int NUMPOINTPLOT= 	100;
 
 int displayOptions(Mat frame) {
 	char filename[200];
@@ -69,27 +68,6 @@ void showFrame(string WINDOW_NAME, Mat frame) {
 	imshow(WINDOW_NAME, frame);
 }
 
-void displayPointsConvex(vp2 points, Mat &frame1, Scalar const color, Scalar const color2) {
-	vp points2;
-	int lim = NUM_POINT_MAX_PLOT;
-
-	if (points.size() <= NUM_POINT_MAX_PLOT) {
-		lim = points.size();
-	}
-	for (int i = 0; i < lim; i++) {
-		drawCircle(frame1, points[i], color2);
-		points2.pb(Point((int) points[i].x, (int) points[i].y));
-	}
-
-	//get the convex hull
-	vvp hull(1);
-	if (points2.size() > 0) {
-		convexHullI(points2, hull[0]);
-	}
-
-	drawContoursI(frame1, hull, hull.size(), color);
-
-}
 
 
 void ExtractDescriptors(){
@@ -122,21 +100,26 @@ void StartAnalysisOverCamera() {
 	/*
 	 * Calc the key points and descriptors for the training image
 	 */
-	vkp kpsift, kpsurf;
-	Mat  descsift, descsurf;
+	vkp kpsift, kpsurf, kporb;
+	Mat  descsift, descsurf, descorb;
+	vp2 points;
 	getKeyPointsSIFT(trainingImg, kpsift);
 	getDescriptorsSIFT(trainingImg, kpsift, descsift);
 
 	getKeyPointsSURF(trainingImg, kpsurf);
 	getDescriptorsSURF(trainingImg, kpsurf, descsurf);
 
+	getKeyPointsORB(trainingImg, kporb);
+	getDescriptorsORB(trainingImg, kporb, descorb);
+
 
 	for (;;) {
 		capture.read(frame1);
-		capture.read(frame2);
+
 
 		//Detect movement
 		if (MOVEMENT) {
+			capture.read(frame2);
 			pair<vvp, v4> aux = getMovements(frame1, frame2);
 			vvp contours = aux.first;
 			v4 hierarchy = aux.second;
@@ -144,22 +127,14 @@ void StartAnalysisOverCamera() {
 		}
 
 		//Method SURF
-		if (SURFM) {
-			vp2 points = surfI(frame1,kpsurf, descsurf);
-			displayPointsConvex(points, frame1, RED, RED);
-		}
-
+		if (SURFM) points = surfI(frame1,kpsurf, descsurf);
+		displayPointsConvex(points, frame1, RED, RED, NUMPOINTPLOT);
 		//Method SIFT
-		if (SIFTM) {
-			vp2 points = siftI(frame1,kpsift, descsift);
-			displayPointsConvex(points, frame1, BLUE, BLUE);
-		}
-
+		if (SIFTM) points = siftI(frame1,kpsift, descsift);
+		displayPointsConvex(points, frame1, BLUE, BLUE, NUMPOINTPLOT);
 		//Method ORB
-		if (ORBM) {
-		//	vp2 points =  orbI(trainingImg, frame1);
-		//	displayPointsConvex(points, frame1, YELLOW, YELLOW);
-		}
+		if (ORBM)	 points = orbI(frame1, kporb, descorb);
+  	displayPointsConvex(points, frame1, YELLOW, YELLOW, NUMPOINTPLOT);
 
 		//Pause
 		if (!PAUSED) {

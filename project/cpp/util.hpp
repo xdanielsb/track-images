@@ -72,3 +72,24 @@ void showDescriptors(Mat desc){
 		cout << endl;
 	}
 }
+
+
+void displayPointsConvex(vp2 points, Mat &frame1, Scalar const color, Scalar const color2, int lim ) {
+	vp points2;
+	if (points.size() <= lim) {
+		lim = points.size();
+	}
+	for (int i = 0; i < lim; i++) {
+		drawCircle(frame1, points[i], color2);
+		points2.pb(Point((int) points[i].x, (int) points[i].y));
+	}
+
+	//get the convex hull
+	vvp hull(1);
+	if (points2.size() > 0) {
+		convexHullI(points2, hull[0]);
+	}
+
+	drawContoursI(frame1, hull, hull.size(), color);
+
+}
