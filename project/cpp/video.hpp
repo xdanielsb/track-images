@@ -91,10 +91,8 @@ void displayPointsConvex(vp2 points, Mat &frame1, Scalar const color, Scalar con
 
 
 void ExtractDescriptors(){
-	Mat trainingImg = imread("../datasets/images/5.jpg");
+	Mat trainingImg = imread("../datasets/images/3.jpg");
 	getDescriptor(trainingImg);
-	imshow("TRAINING IMAGE", trainingImg);
-	waitKey(0);
 }
 
 void StartAnalysisOverCamera() {
@@ -133,7 +131,7 @@ void StartAnalysisOverCamera() {
 		//Method SURF
 		if (SURFM) {
 			vp2 points = surfI(trainingImg, frame1);
-		//	displayPointsConvex(points, frame1, RED, RED);
+			displayPointsConvex(points, frame1, RED, RED);
 		}
 
 		//Method SIFT

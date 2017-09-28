@@ -28,13 +28,22 @@ int const CAMERA_LAPTOP = 0;
 int const CAMERA_EXTERN = 1;
 int const MAX_THRESH = 255;
 int const BLUR_SIZE = 10 ;
+
+
+//Note : Colors in BGR
+Scalar const BLACK = Scalar(0,0,0);
 Scalar const GREEN = Scalar(0,255,0);
+Scalar const LIME = Scalar(0,128,0);
 Scalar const RED = Scalar(0,0,255);
 Scalar const BLUE = Scalar(255,0,0);
-Scalar const PURPLE = Scalar(255,0,255);
+Scalar const MAGENTA = Scalar(255,0,255);
+Scalar const PURPLE = Scalar(128,0,128);
 Scalar const WHITE = Scalar(255,255,255);
 Scalar const CYAN = Scalar(255,255,0);
 Scalar const YELLOW = Scalar(0,255,255);
+Scalar const SILVER = Scalar(192,192,192);
+Scalar const OLIVE = Scalar(0,128,128);
+Scalar const MAROON = Scalar(0,0,128);
 
 #define pb push_back
 #define mp make_pair

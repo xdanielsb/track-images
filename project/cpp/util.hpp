@@ -43,7 +43,7 @@ void drawContoursI(Mat &image, InputArrayOfArrays contours, int numElements, con
 	}
 }
 
-void drawCircle(Mat &dst, Point p, Scalar const color = GREEN, int radius=3, int thickness= 3){
+void drawCircle(Mat &dst, Point p, Scalar const color = GREEN, int radius=1, int thickness= 2){
 	circle(dst, p, radius, color, thickness);
 }
 
@@ -51,3 +51,12 @@ void convexHullI(vp points, vp &hull, bool clockwise = false){
 	convexHull(points, hull, clockwise);
 
 }
+
+void drawKeyPoints(Mat & img, vkp kp, const Scalar color= GREEN){
+	int sizek = kp.size();
+		for (int i =0; i < sizek; ++i){
+			Point2f a =  kp[i].pt;
+			drawCircle(img,a, color);
+		}
+}
+
