@@ -38,7 +38,7 @@ bool BRIEFM = true;
 
 unsigned int NUMPOINTPLOT= 	100;
 
-int displayOptions(Mat frame) {
+int displayandReadOptions(Mat frame) {
 	char filename[200];
 	char key = (char) waitKey(30);
 
@@ -78,25 +78,17 @@ void ExtractDescriptors(){
 
 void StartAnalysisOverCamera() {
 
+	Mat frame1, frame2;
 	Mat trainingImg = imread("img/trainingImg.png");
-	imshow("TRAINING IMAGE", trainingImg);
-
 	VideoCapture capture(CAMERA_EXTERN);
 
-	if (!capture.isOpened()) {
-		capture.open(CAMERA_EXTERN);
-	}
-
-	if (!capture.isOpened()) {
-		cerr << "Failed to open camera" << endl;
-	}
-
+	if (!capture.isOpened()) capture.open(CAMERA_EXTERN);
+	if (!capture.isOpened()) cerr << "Failed to open camera" << endl;
 	namedWindow(WINDOW_NAME, CV_WINDOW_KEEPRATIO);
-
-	Mat frame1, frame2;
 
 	printf("%s", INSTRUCTIONS.c_str());
 	fflush(stdout);
+	imshow("TRAINING IMAGE", trainingImg);
 
 	/*
 	 * Calc the key points and descriptors for the training image
@@ -117,34 +109,34 @@ void StartAnalysisOverCamera() {
 	for (;;) {
 		capture.read(frame1);
 
-
-		//Detect movement
-		if (MOVEMENT) {
-			capture.read(frame2);
-			pair<vvp, v4> aux = getMovements(frame1, frame2);
-			vvp contours = aux.first;
-			v4 hierarchy = aux.second;
-			drawContoursI(frame1, contours, contours.size(), CYAN, hierarchy);
-		}
-
-		//Method SURF
-		if (SURFM) points = surfI(frame1,kpsurf, descsurf);
-		displayPointsConvex(points, frame1, RED, RED, NUMPOINTPLOT);
-		//Method SIFT
-		if (SIFTM) points = siftI(frame1,kpsift, descsift);
-		displayPointsConvex(points, frame1, BLUE, BLUE, NUMPOINTPLOT);
-		//Method ORB
-		if (ORBM)	 points = orbI(frame1, kporb, descorb);
-  	displayPointsConvex(points, frame1, YELLOW, YELLOW, NUMPOINTPLOT);
-
 		//Pause
 		if (!PAUSED) {
-			if (frame1.empty())
-				break;
+			if (frame1.empty()) break;
+
+			//Detect movement
+			if (MOVEMENT) {
+				capture.read(frame2);
+				pair<vvp, v4> aux = getMovements(frame1, frame2);
+				vvp contours = aux.first;
+				v4 hierarchy = aux.second;
+				drawContoursI(frame1, contours, contours.size(), CYAN, hierarchy);
+			}
+
+			//Method SURF
+			if (SURFM) points = surfI(frame1,kpsurf, descsurf);
+			displayPointsConvex(points, frame1, RED, RED, NUMPOINTPLOT);
+			//Method SIFT
+			if (SIFTM) points = siftI(frame1,kpsift, descsift);
+			displayPointsConvex(points, frame1, BLUE, BLUE, NUMPOINTPLOT);
+			//Method ORB
+			if (ORBM)	 points = orbI(frame1, kporb, descorb);
+	  	displayPointsConvex(points, frame1, YELLOW, YELLOW, NUMPOINTPLOT);
+
+
 			showFrame(WINDOW_NAME, frame1);
 		}
 
-		displayOptions(frame1);
+		displayandReadOptions(frame1);
 
 	}
 
