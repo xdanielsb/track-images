@@ -1,48 +1,24 @@
 #include <opencv2/nonfree/features2d.hpp>
 
-vp2 siftIM(Mat trainingImg, Mat frame1) {
-
+void getKeyPointsSIFT(Mat img, vkp &keyp){
 	SiftFeatureDetector detector(100);
-	vkp kpObject, kpScene;
-
-	//detect the key points
-	detector.detect(trainingImg, kpObject);
-	detector.detect(frame1, kpScene);
-
-	//detect the descriptors
+	detector.detect(img, keyp);
+}
+void getDescriptorsSIFT(Mat img, vkp &keyp, Mat &desc){
 	SiftDescriptorExtractor extractor;
-	Mat descObject, descScene;
-
-	extractor.compute(trainingImg, kpObject, descObject);
-	extractor.compute(frame1, kpScene, descScene);
+	extractor.compute(img, keyp, desc);
+}
 
 
-	//Matching the descriptors using FLANN matcher
-	FlannBasedMatcher matcher;
-	vdm1 matches;
-	matcher.match(descObject, descScene, matches);
-	double maxDistance = 0, minDistance = 500;
 
-	//Compute the max and the min distance
-	for (int i = 0; i < descObject.rows; i++) {
-		double dist = matches[i].distance;
-		if (dist < minDistance)
-			minDistance = dist;
-		if (dist > maxDistance)
-			maxDistance = dist;
-	}
+vp2 siftI(Mat frame1, vkp kpObject, Mat descObject) {
 
-	//	printf("Max distance: %f  \n", maxDistance);
-	//	printf("Min distance: %f  \n", minDistance);
+	vkp kpScene;
+	Mat  descScene;
+	getKeyPointsSIFT(frame1, kpScene);
+	getDescriptorsSIFT(frame1, kpScene, descScene);
+	vdm2 goodMatches = flannMatcher(descObject, descScene);
 
-	//Draw the good matches
-	//printf("sift: The number of matches is %d \n", matches.size());
-	vdm2 goodMatches;
-	for (int i = 0; i < descObject.rows; i++) {
-		double dist = matches[i].distance;
-		if (dist < 3 * minDistance)
-			goodMatches.push(DMatch2(matches[i], dist));
-	}
 	vp2 points;
 	while (!goodMatches.empty()) {
 		DMatch2 aux = goodMatches.top();

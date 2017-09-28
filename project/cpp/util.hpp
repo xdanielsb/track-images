@@ -60,3 +60,15 @@ void drawKeyPoints(Mat & img, vkp kp, const Scalar color= GREEN){
 		}
 }
 
+void showDescriptors(Mat desc){
+	unsigned char *input = (unsigned char*)(desc.data);
+	show(desc.cols);
+	show(desc.rows);
+	for (int row = 0; row < desc.rows; row++){
+		for (int col = 0; col < desc.cols;  col++){
+				int val = input[desc.cols * row + col];
+			cout << val << " ";
+		}
+		cout << endl;
+	}
+}

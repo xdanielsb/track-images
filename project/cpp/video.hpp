@@ -11,8 +11,10 @@
 
 #include "constants.hpp"
 #include "util.hpp"
-#include "surf.hpp" //depend on constants and util
-#include "sift.hpp" //depend on constants and util
+#include "matchers.hpp"
+
+#include "surf.hpp" //depend on constants util, matchers
+#include "sift.hpp" //depend on constants, util, matchers
 #include "orb.hpp" //depend on constants and util
 #include "brief.hpp" //depend on constants and util
 #include "descriptorExtractor.hpp" //depend on constants and util
@@ -29,10 +31,10 @@ bool DEBUG = false;
 bool MOVEMENT = false;
 bool PAUSED = false;
 
-bool SURFM = false;
-bool SIFTM = false;
-bool ORBM = false;
-bool BRIEFM = false;
+bool SURFM = true;
+bool SIFTM = true;
+bool ORBM = true;
+bool BRIEFM = true;
 
 unsigned int NUM_POINT_MAX_PLOT = 	3;
 
@@ -116,6 +118,19 @@ void StartAnalysisOverCamera() {
 
 	printf("%s", INSTRUCTIONS.c_str());
 	fflush(stdout);
+
+	/*
+	 * Calc the key points and descriptors for the training image
+	 */
+	vkp kpsift, kpsurf;
+	Mat  descsift, descsurf;
+	getKeyPointsSIFT(trainingImg, kpsift);
+	getDescriptorsSIFT(trainingImg, kpsift, descsift);
+
+	getKeyPointsSURF(trainingImg, kpsurf);
+	getDescriptorsSURF(trainingImg, kpsurf, descsurf);
+
+
 	for (;;) {
 		capture.read(frame1);
 		capture.read(frame2);
@@ -130,19 +145,19 @@ void StartAnalysisOverCamera() {
 
 		//Method SURF
 		if (SURFM) {
-			vp2 points = surfI(trainingImg, frame1);
+			vp2 points = surfI(frame1,kpsurf, descsurf);
 			displayPointsConvex(points, frame1, RED, RED);
 		}
 
 		//Method SIFT
 		if (SIFTM) {
-			vp2 points = siftIM(trainingImg, frame1);
+			vp2 points = siftI(frame1,kpsift, descsift);
 			displayPointsConvex(points, frame1, BLUE, BLUE);
 		}
 
 		//Method ORB
 		if (ORBM) {
-			vp2 points =  orbI(trainingImg, frame1);
+		//	vp2 points =  orbI(trainingImg, frame1);
 		//	displayPointsConvex(points, frame1, YELLOW, YELLOW);
 		}
 
