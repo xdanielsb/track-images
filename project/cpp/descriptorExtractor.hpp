@@ -3,20 +3,36 @@
 using namespace std;
 void getDescriptor(Mat image) {
 
-	Mat dsift;
-	vkp kpObject;;
+	Mat dsift, dsurf;
+	vkp kpsift, kpsurf;
 
-	SiftFeatureDetector detector(100);
-	SiftDescriptorExtractor extractor;
+	SiftFeatureDetector detectorSift(100);
+	SiftDescriptorExtractor extractorSift;
 
-	detector.detect(image, kpObject);
-	extractor.compute(image, kpObject, dsift);
+	detectorSift.detect(image, kpsift);
+	extractorSift.compute(image, kpsift, dsift);
 
 	int nrows = dsift.rows;
 	int ncols = dsift.cols;
 
+	cout << "SIFT " << endl;
 	show(nrows);
 	show(ncols);
+
+	SurfFeatureDetector detectorSurf(400);
+	detectorSurf.detect(image, kpsurf);
+	SurfDescriptorExtractor extractorSurf;
+	extractorSurf.compute(image, kpsurf, dsurf);
+
+	nrows = dsurf.rows;
+	ncols = dsurf.cols;
+
+	cout << "SURF " << endl;
+	show(nrows);
+	show(ncols);
+
+
+	/*
 
 	unsigned char *input = (unsigned char*)(dsift.data);
 	for (int row = 0; row < nrows; row++){
@@ -25,6 +41,6 @@ void getDescriptor(Mat image) {
 			//cout << val << " ";
 		}
 		//cout << endl;
-	}
+	}*/
 }
 

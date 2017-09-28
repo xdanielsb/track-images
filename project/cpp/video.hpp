@@ -91,7 +91,7 @@ void displayPointsConvex(vp2 points, Mat &frame1, Scalar const color, Scalar con
 
 
 void ExtractDescriptors(){
-	Mat trainingImg = imread("../datasets/images/6.jpg");
+	Mat trainingImg = imread("../datasets/images/5.jpg");
 	getDescriptor(trainingImg);
 	imshow("TRAINING IMAGE", trainingImg);
 	waitKey(0);
