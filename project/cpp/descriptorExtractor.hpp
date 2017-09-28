@@ -5,11 +5,7 @@ using namespace std;
 
 Mat FeaturesUnclustered;
 
-
-
-
-
-void createBagOfWords(){
+void createBagOfWords(const string& source = "dictionary.yml"){
 	int dictionarySize = 1;
 	TermCriteria tc(CV_TERMCRIT_ITER,100,0.001);
 	int retries=1;
@@ -19,9 +15,8 @@ void createBagOfWords(){
 
 	//cluster the feature vectors
 	Mat dictionary=bowTrainer.cluster(FeaturesUnclustered);
-	//store the vocabulary
 
-	const string& source = "dictionary.yml";
+	//store the vocabulary
 	FileStorage fs(source, FileStorage::WRITE);
 	fs << "vocabulary" << dictionary;
 	fs.release();
@@ -29,32 +24,22 @@ void createBagOfWords(){
 
 void getDescriptor(Mat image) {
 
-
 	Mat dsift, dsurf, dorb, dmser;
 	vkp kpsift, kpsurf, kporb, kpmser, kpfast, kpstar, kpbrisk, kpgftt, kpdense, kpsimple;
   const	int numKeyPoints = 100;
 
-	SiftFeatureDetector detectorSift(numKeyPoints);
-	SiftDescriptorExtractor extractorSift;
-	detectorSift.detect(image, kpsift);
-	extractorSift.compute(image, kpsift, dsift);
-	cout << "SIFT " << endl;
+	getKeyPointsSIFT(image, kpsift);
+	getDescriptorsSIFT(image, kpsift, dsift);
 	//showDescriptors(dsift);
 	//FeaturesUnclustered.pb(dsift);
 
-	SurfFeatureDetector detectorSurf(numKeyPoints);
-	SurfDescriptorExtractor extractorSurf;
-	detectorSurf.detect(image, kpsurf);
-	extractorSurf.compute(image, kpsurf, dsurf);
-	cout << "SURF " << endl;
+	getKeyPointsSURF(image, kpsurf);
+	getDescriptorsSURF(image, kpsurf, dsurf);
 	//showDescriptors(dsurf);
-	//FeaturesUnclustered.pb(dsurf);
+	FeaturesUnclustered.pb(dsurf);
 
-
-	OrbFeatureDetector detectorORB(numKeyPoints);
-	OrbDescriptorExtractor extractorOrb;
-	detectorORB.detect(image, kporb);
-	extractorOrb.compute(image, kporb, dorb);
+	getKeyPointsORB(image, kporb);
+	getDescriptorsORB(image, kporb, dorb);
 	//showDescriptors(dorb);
 
 
@@ -81,6 +66,10 @@ void getDescriptor(Mat image) {
 
 
 
+  createBagOfWords();
+
+
+
 	namedWindow("Key Points", CV_WINDOW_OPENGL);
 	//imshow("TRAINING IMAGE", image);
 
@@ -98,6 +87,7 @@ void getDescriptor(Mat image) {
 	imshow("Key Points", image);
 
 	waitKey(0);
+
 
 }
 
