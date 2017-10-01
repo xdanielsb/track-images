@@ -7,6 +7,7 @@ void getKeyPointsORB(Mat img, vkp &keyp){
 void getDescriptorsORB(Mat img, vkp &keyp, Mat &desc){
 	OrbDescriptorExtractor extractor;
 	extractor.compute(img, keyp, desc);
+	desc.convertTo(desc, CV_32F);
 }
 
 vp2 orbI(Mat frame1, vkp kpObject, Mat descObject) {

@@ -3,44 +3,79 @@
 using namespace std;
 
 
-Mat FeaturesUnclustered;
+static map <int , string> namesdic = {
+		{0, "SIFT"},
+		{1, "SURF"},
+		{2, "ORB"}
+};
 
-void createBagOfWords(const string& source = "dictionary.yml"){
-	int dictionarySize = 1;
+void createBagOfWords(vm vmfeatures){
+
+	int dictionarySize = 10;
 	TermCriteria tc(CV_TERMCRIT_ITER,100,0.001);
 	int retries=1;
 	int flags=KMEANS_PP_CENTERS;
 
-	BOWKMeansTrainer bowTrainer(dictionarySize,tc,retries,flags);
-
 	//cluster the feature vectors
-	Mat dictionary=bowTrainer.cluster(FeaturesUnclustered);
+	for (ui i =0; i < vmfeatures.size(); i++){
+		BOWKMeansTrainer bowTrainer(dictionarySize,tc,retries,flags);
+		show(vmfeatures[i].size());
+		Mat dictionary=bowTrainer.cluster(vmfeatures[i]);
+		//store the vocabulary
+	  string source = "dictionary";
+	  source.append(namesdic[i]);
+	  source.append(".yml");
+	  show(source);
 
-	//store the vocabulary
-	FileStorage fs(source, FileStorage::WRITE);
-	fs << "vocabulary" << dictionary;
-	fs.release();
+	  persistMatrix(dictionary, source);
+	}
+
 }
 
-void getDescriptor(Mat image) {
-
+vm getDescriptor(int numImages) {
+	vm vmfeatures;
+	Mat image;
 	Mat dsift, dsurf, dorb, dmser;
 	vkp kpsift, kpsurf, kporb, kpmser, kpfast, kpstar, kpbrisk, kpgftt, kpdense, kpsimple;
-  const	int numKeyPoints = 100;
+  const	int numKeyPoints = 1000;
 
-	getKeyPointsSIFT(image, kpsift);
-	getDescriptorsSIFT(image, kpsift, dsift);
-	//showDescriptors(dsift);
-	//FeaturesUnclustered.pb(dsift);
+  Mat fcsift, fcsurf, fcorb;
 
-	getKeyPointsSURF(image, kpsurf);
-	getDescriptorsSURF(image, kpsurf, dsurf);
-	//showDescriptors(dsurf);
-	FeaturesUnclustered.pb(dsurf);
 
-	getKeyPointsORB(image, kporb);
-	getDescriptorsORB(image, kporb, dorb);
-	//showDescriptors(dorb);
+
+  for (int i = 1; i <= numImages; ++i){
+    string name = "../datasets/images/";
+    name.append(to_string(i));
+    name.append(".jpg");
+    image = imread(name);
+
+
+  	getKeyPointsSIFT(image, kpsift);
+  	getDescriptorsSIFT(image, kpsift, dsift);
+  	fcsift.pb(dsift);
+    // show(fcsift.size());
+  	//showDescriptors(dsift);
+
+		getKeyPointsSURF(image, kpsurf);
+		getDescriptorsSURF(image, kpsurf, dsurf);
+		//show(dsurf.depth());
+		fcsurf.pb(dsurf);
+		//show(fcsurf.size());
+		//showDescriptors(dsurf);
+
+		getKeyPointsORB(image, kporb);
+		getDescriptorsORB(image, kporb, dorb);
+		//show(dorb.depth());
+		dorb.convertTo(dorb, CV_32F);
+		fcorb.pb(dorb);
+		//show(fcorb.size());
+		//showDescriptors(dorb);
+  }
+   vmfeatures.pb(fcsift);
+   vmfeatures.pb(fcsurf);
+   vmfeatures.pb(fcorb);
+
+ //
 
 
 	MserFeatureDetector detectorMser(numKeyPoints);
@@ -66,11 +101,10 @@ void getDescriptor(Mat image) {
 
 
 
-  createBagOfWords();
 
 
 
-	namedWindow("Key Points", CV_WINDOW_OPENGL);
+	/*namedWindow("Key Points", CV_WINDOW_OPENGL);
 	//imshow("TRAINING IMAGE", image);
 
 	drawKeyPoints(image, kpsift, GREEN);
@@ -86,8 +120,9 @@ void getDescriptor(Mat image) {
 
 	imshow("Key Points", image);
 
-	waitKey(0);
+	waitKey(0);*/
 
+	return vmfeatures;
 
 }
 

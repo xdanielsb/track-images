@@ -9,8 +9,9 @@ typedef vector<Point> vp;
 typedef vector<vp> vvp;
 typedef vector<Vec4i> v4;
 typedef vector<KeyPoint> vkp;
-
+typedef vector <Mat> vm;
 typedef vector<Point2f> vp2;
+typedef unsigned int ui;
 
 struct DMatch2{
     DMatch dm;

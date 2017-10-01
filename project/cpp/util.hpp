@@ -93,3 +93,10 @@ void displayPointsConvex(vp2 points, Mat &frame1, Scalar const color, Scalar con
 	drawContoursI(frame1, hull, hull.size(), color);
 
 }
+
+void persistMatrix(Mat matr, string &nameFile){
+  //Storage the file in disk
+	FileStorage fs(nameFile, FileStorage::WRITE);
+	fs << "vocabulary" << matr;
+	fs.release();
+}

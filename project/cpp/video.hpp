@@ -72,8 +72,9 @@ void showFrame(string WINDOW_NAME, Mat frame) {
 
 
 void ExtractDescriptors(){
-	Mat trainingImg = imread("../datasets/images/3.jpg");
-	getDescriptor(trainingImg);
+	int numImagestoCover = 6;
+	vm descs = getDescriptor(numImagestoCover);
+	createBagOfWords(descs);
 }
 
 void StartAnalysisOverCamera() {
@@ -131,7 +132,6 @@ void StartAnalysisOverCamera() {
 			//Method ORB
 			if (ORBM)	 points = orbI(frame1, kporb, descorb);
 	  	displayPointsConvex(points, frame1, YELLOW, YELLOW, NUMPOINTPLOT);
-
 
 			showFrame(WINDOW_NAME, frame1);
 		}
