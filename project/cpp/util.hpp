@@ -60,6 +60,14 @@ void drawKeyPoints(Mat & img, vkp kp, const Scalar color= GREEN){
 		}
 }
 
+void drawKeyPoints(Mat & img, vp2 kp, const Scalar color= GREEN){
+	int sizek = kp.size();
+		for (int i =0; i < sizek; ++i){
+			Point2f a =  kp[i];
+			drawCircle(img,a, color);
+		}
+}
+
 void showDescriptors(Mat desc){
 	unsigned char *input = (unsigned char*)(desc.data);
 	show(desc.cols);
@@ -89,11 +97,12 @@ void displayPointsConvex(vp2 points, Mat &frame1, Scalar const color, Scalar con
 	if (points2.size() > 0) {
 		convexHullI(points2, hull[0]);
 	}
-
 	drawContoursI(frame1, hull, hull.size(), color);
-
 }
 
+/*
+ * The persistence could be .yml or .xml
+ */
 void persistMatrix(Mat matr, string &nameFile){
   //Storage the file in disk
 	FileStorage fs(nameFile, FileStorage::WRITE);

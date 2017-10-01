@@ -69,51 +69,74 @@ void showFrame(string WINDOW_NAME, Mat frame) {
 	imshow(WINDOW_NAME, frame);
 }
 
+void TestDescriptors(vm clusters, string name, bool showi){
+	show(name);
+	//Now Get the features of the train image to test
+	Mat trainingImg = imread(name);
 
+	//toHSV(trainingImg, trainingImg);
+	cout << "SIFT" << endl;
+	siftI(trainingImg, clusters[NSIFT], true);
+
+	cout << "SURF" << endl;
+	surfI(trainingImg, clusters[NSURF], true);
+
+	cout << "ORB" << endl;
+	orbI(trainingImg, clusters[NORB], true);
+
+	if (showi){
+			imshow("Image", trainingImg);
+			waitKey(0);
+	}
+}
 
 void ExtractDescriptors(){
-	int numImagestoCover = 6;
+	int numImagestoCover = 20;
+	int dictionarySize = 100;
 	vm descs = getDescriptor(numImagestoCover);
-	createBagOfWords(descs);
+	vm clusters = createBagOfWords(descs, dictionarySize);
+	show(dictionarySize);
+
+	//Test training set
+	for (int i = 1 ; i <=2; i++){
+		string name = join("../datasets/images/", to_string(i), ".jpg");
+		TestDescriptors(clusters, name, false);
+		cout << endl;
+	}
+
+	//Test new images to label
+	for (int i = 2 ; i <=2; i++){
+		string name = join("../datasets/test/", to_string(i), ".jpg");
+		TestDescriptors(clusters, name, true);
+		cout << endl;
+	}
+
+
 }
 
 void StartAnalysisOverCamera() {
-
 	Mat frame1, frame2;
-	Mat trainingImg = imread("img/trainingImg.png");
-	VideoCapture capture(CAMERA_EXTERN);
+	vp2 points;
 
+	VideoCapture capture(0);
 	if (!capture.isOpened()) capture.open(CAMERA_EXTERN);
 	if (!capture.isOpened()) cerr << "Failed to open camera" << endl;
 	namedWindow(WINDOW_NAME, CV_WINDOW_KEEPRATIO);
-
 	printf("%s", INSTRUCTIONS.c_str());
 	fflush(stdout);
-	imshow("TRAINING IMAGE", trainingImg);
 
-	/*
-	 * Calc the key points and descriptors for the training image
-	 */
-	vkp kpsift, kpsurf, kporb;
-	Mat  descsift, descsurf, descorb;
-	vp2 points;
-	getKeyPointsSIFT(trainingImg, kpsift);
-	getDescriptorsSIFT(trainingImg, kpsift, descsift);
 
-	getKeyPointsSURF(trainingImg, kpsurf);
-	getDescriptorsSURF(trainingImg, kpsurf, descsurf);
-
-	getKeyPointsORB(trainingImg, kporb);
-	getDescriptorsORB(trainingImg, kporb, descorb);
-
+	int numImagestoCover = 10;
+	int dictionarySize = 100;
+	vm descs = getDescriptor(numImagestoCover);
+	vm clusters = createBagOfWords(descs, dictionarySize);
+	show(dictionarySize);
 
 	for (;;) {
 		capture.read(frame1);
-
 		//Pause
 		if (!PAUSED) {
 			if (frame1.empty()) break;
-
 			//Detect movement
 			if (MOVEMENT) {
 				capture.read(frame2);
@@ -122,22 +145,19 @@ void StartAnalysisOverCamera() {
 				v4 hierarchy = aux.second;
 				drawContoursI(frame1, contours, contours.size(), CYAN, hierarchy);
 			}
-
 			//Method SURF
-			if (SURFM) points = surfI(frame1,kpsurf, descsurf);
+			//toHSV(frame1, frame1);
+			if (SURFM) points = surfI(frame1, clusters[NSURF], true);
 			displayPointsConvex(points, frame1, RED, RED, NUMPOINTPLOT);
 			//Method SIFT
-			if (SIFTM) points = siftI(frame1,kpsift, descsift);
+			if (SIFTM) points = siftI(frame1, clusters[NSIFT], true);
 			displayPointsConvex(points, frame1, BLUE, BLUE, NUMPOINTPLOT);
 			//Method ORB
-			if (ORBM)	 points = orbI(frame1, kporb, descorb);
+			if (ORBM)	 points = orbI(frame1 , clusters[NORB], true);
 	  	displayPointsConvex(points, frame1, YELLOW, YELLOW, NUMPOINTPLOT);
-
 			showFrame(WINDOW_NAME, frame1);
 		}
-
 		displayandReadOptions(frame1);
-
 	}
 
 }

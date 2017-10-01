@@ -2,31 +2,32 @@
 
 using namespace std;
 
-
+enum{NSIFT, NSURF, NORB};
 static map <int , string> namesdic = {
 		{0, "SIFT"},
 		{1, "SURF"},
 		{2, "ORB"}
 };
 
-void createBagOfWords(vm vmfeatures){
+vm createBagOfWords(vm vmfeatures, int dictionarySize =100){
 
-	int dictionarySize = 10;
-	TermCriteria tc(CV_TERMCRIT_ITER,100,0.001);
+	vm clusters;
+	int MAX_ITER  = 100;
+	float EPS = 0.001;
+	TermCriteria tc(CV_TERMCRIT_ITER,MAX_ITER,EPS);
 	int retries=1;
 	int flags=KMEANS_PP_CENTERS;
 
 	//cluster the feature vectors
 	for (ui i =0; i < vmfeatures.size(); i++){
 		BOWKMeansTrainer bowTrainer(dictionarySize,tc,retries,flags);
-		show(vmfeatures[i].size());
 		Mat dictionary=bowTrainer.cluster(vmfeatures[i]);
-
+		clusters.pb(dictionary);
 		//store the vocabulary
-	  string source = join("dictionary", namesdic[i], ".yml");
-	  persistMatrix(dictionary, source);
+	  //string source = join("dictionary", namesdic[i], ".yml");
+	  //persistMatrix(dictionary, source);
 	}
-
+	return clusters;
 }
 
 vm getDescriptor(int numImages) {
@@ -43,6 +44,7 @@ vm getDescriptor(int numImages) {
   for (int i = 1; i <= numImages; ++i){
     String name = join( "../datasets/images/", to_string(i), ".jpg");
     image = imread(name);
+    //toHSV(image, image);
 
 
   	getKeyPointsSIFT(image, kpsift);

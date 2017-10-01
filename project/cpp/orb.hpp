@@ -10,12 +10,13 @@ void getDescriptorsORB(Mat img, vkp &keyp, Mat &desc){
 	desc.convertTo(desc, CV_32F);
 }
 
-vp2 orbI(Mat frame1, vkp kpObject, Mat descObject) {
+vp2 orbI(Mat &frame1, Mat descObject, bool drawKpoints=false) {
 	vkp kpScene;
 	Mat  descScene;
 	getKeyPointsORB(frame1, kpScene);
 	getDescriptorsORB(frame1, kpScene, descScene);
 	vdm2 goodMatches = bfMatcher(descObject, descScene);
 	vp2 points = bestMatches(goodMatches, kpScene);
+	if (drawKpoints) drawKeyPoints(frame1, points, CYAN);
 	return points;
 }

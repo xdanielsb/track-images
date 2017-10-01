@@ -15,7 +15,7 @@ typedef unsigned int ui;
 
 struct DMatch2{
     DMatch dm;
-    float dis;
+    float dis=0.0;
     DMatch2(){}
     DMatch2(DMatch _dm, float _dis){
         dm = _dm;
