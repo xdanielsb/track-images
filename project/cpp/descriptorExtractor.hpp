@@ -21,12 +21,9 @@ void createBagOfWords(vm vmfeatures){
 		BOWKMeansTrainer bowTrainer(dictionarySize,tc,retries,flags);
 		show(vmfeatures[i].size());
 		Mat dictionary=bowTrainer.cluster(vmfeatures[i]);
-		//store the vocabulary
-	  string source = "dictionary";
-	  source.append(namesdic[i]);
-	  source.append(".yml");
-	  show(source);
 
+		//store the vocabulary
+	  string source = join("dictionary", namesdic[i], ".yml");
 	  persistMatrix(dictionary, source);
 	}
 
@@ -44,9 +41,7 @@ vm getDescriptor(int numImages) {
 
 
   for (int i = 1; i <= numImages; ++i){
-    string name = "../datasets/images/";
-    name.append(to_string(i));
-    name.append(".jpg");
+    String name = join( "../datasets/images/", to_string(i), ".jpg");
     image = imread(name);
 
 

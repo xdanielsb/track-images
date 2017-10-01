@@ -100,3 +100,11 @@ void persistMatrix(Mat matr, string &nameFile){
 	fs << "vocabulary" << matr;
 	fs.release();
 }
+
+string join(string str1, string str2, string str3){
+	String res ="";
+	res.append(str1);
+	res.append(str2);
+	res.append(str3);
+	return res;
+}
