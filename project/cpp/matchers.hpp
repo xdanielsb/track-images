@@ -26,7 +26,7 @@ vdm2 flannMatcher(Mat descObject, Mat descScene){
 
 
 		double prob =  maxDistance / (acumbest/goodMatches.size());
-		show(prob);
+	///	show(prob);
 		return goodMatches;
 }
 
@@ -54,7 +54,7 @@ vdm2 bfMatcher(Mat descObject, Mat descScene){
 		}
 
 		double prob =  (acum/descObject.rows) / (acumbest/goodMatches.size());
-		show(prob);
+	///	show(prob);
 
 		return goodMatches;
 

@@ -21,6 +21,7 @@
 
 #include "movement.hpp" //depend on util
 
+
 using namespace cv;
 using namespace std;
 /*
@@ -70,18 +71,18 @@ void showFrame(string WINDOW_NAME, Mat frame) {
 }
 
 void TestDescriptors(vm clusters, string name, bool showi){
-	show(name);
+//	show(name);
 	//Now Get the features of the train image to test
 	Mat trainingImg = imread(name);
 
 	//toHSV(trainingImg, trainingImg);
-	cout << "SIFT" << endl;
+	//cout << "SIFT" << endl;
 	siftI(trainingImg, clusters[NSIFT], true);
 
-	cout << "SURF" << endl;
+	//cout << "SURF" << endl;
 	surfI(trainingImg, clusters[NSURF], true);
 
-	cout << "ORB" << endl;
+	//cout << "ORB" << endl;
 	orbI(trainingImg, clusters[NORB], true);
 
 	if (showi){
@@ -91,26 +92,25 @@ void TestDescriptors(vm clusters, string name, bool showi){
 }
 
 void ExtractDescriptors(){
-	int numImagestoCover = 20;
+	int numImagestoCover = 10;
 	int dictionarySize = 100;
 	vm descs = getDescriptor(numImagestoCover);
 	vm clusters = createBagOfWords(descs, dictionarySize);
-	show(dictionarySize);
+//show(dictionarySize);
 
 	//Test training set
 	for (int i = 1 ; i <=2; i++){
 		string name = join("../datasets/images/", to_string(i), ".jpg");
 		TestDescriptors(clusters, name, false);
-		cout << endl;
+		//cout << endl;
 	}
 
 	//Test new images to label
 	for (int i = 2 ; i <=2; i++){
 		string name = join("../datasets/test/", to_string(i), ".jpg");
-		TestDescriptors(clusters, name, true);
-		cout << endl;
+		TestDescriptors(clusters, name, false);
+		//cout << endl;
 	}
-
 
 }
 

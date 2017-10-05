@@ -123,7 +123,7 @@ def video_capture():
     global ACTIVE_METHODS, NUM_SUBPLOT, ACTIVE_FOLLOW
 
     #Create the instance of the video
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
 
     #Choose the method to match
     choose_matcher()

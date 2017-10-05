@@ -1,4 +1,6 @@
 #include "video.hpp"
+#include "time.hpp"
+
 //#include "opencv_version.hpp"
 /**
  * Program that implements methods of tracking
@@ -10,7 +12,13 @@ int main() {
 	//print_version();
 	//StartAnalysisOverCamera();
 
+	auto start = chrono::high_resolution_clock::now();
+
 	ExtractDescriptors();
-	//cout << "hello";
+
+  auto end = chrono::high_resolution_clock::now();
+  chrono::duration<double> diff = end-start;
+	cout << "Turn around time : " <<  diff.count() <<  " seconds." << endl ;
+
 	return 0;
 }
