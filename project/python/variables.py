@@ -23,17 +23,17 @@ OPTION_MATCHER = None
 orb = None
 kp_orb = None
 des_orb = None
-ACTIVE_ORB = True
+ACTIVE_ORB = True #naranja
 
 surf = None
 kp_surf = None
 des_surf = None
-ACTIVE_SURF = True
+ACTIVE_SURF = True #verde
 
 sift = None
 kp_sift = None
 des_sift = None
-ACTIVE_SIFT = True
+ACTIVE_SIFT = True #azul
 
 
 def options():
@@ -125,7 +125,9 @@ def drawMatches(matches, kp1, kp2, c):
 
         # print("Detected point",x1,y1)
         if ACTIVE_METHODS:
-            cv2.circle(ACTUAL_IMAGE, (int(x2),int(y2)), 4, c, 3)
+            pass
+            #print("hello")
+            #cv2.circle(ACTUAL_IMAGE, (int(x2),int(y2)), 2, (0,0,0), 1)
 
     return np.array(points, dtype=np.float32), points
 
