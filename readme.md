@@ -35,16 +35,17 @@ To use the keys O,U,S first crop an image.
 Some examples
 =============
 
-####Detect Movement
+#### Detect Movement
 
 <img src="assets/detect_movement.png"  />
 
 
-####Track custom image
+#### Track custom image
+
 <img src="assets/track-custom-image.png"  />
 
 
-####Track features
+#### Track features
 <img src="assets/track-those-features.png"  />
 
 
