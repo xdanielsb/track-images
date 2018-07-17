@@ -39,13 +39,10 @@ vm getDescriptor(int numImages) {
 
   Mat fcsift, fcsurf, fcorb;
 
-
-
   for (int i = 1; i <= numImages; ++i){
     String name = join( "../datasets/images/", to_string(i), ".jpg");
     image = imread(name);
     //toHSV(image, image);
-
 
   	getKeyPointsSIFT(image, kpsift);
   	getDescriptorsSIFT(image, kpsift, dsift);
@@ -97,11 +94,7 @@ vm getDescriptor(int numImages) {
   detectorBrisk.detect(image, kpsimple);
 
 
-
-
-
-
-	/*namedWindow("Key Points", CV_WINDOW_OPENGL);
+  /*namedWindow("Key Points", CV_WINDOW_OPENGL);
 	//imshow("TRAINING IMAGE", image);
 
 	drawKeyPoints(image, kpsift, GREEN);

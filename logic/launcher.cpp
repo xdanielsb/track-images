@@ -9,17 +9,15 @@
  * @author : Daniel Santos
  */
 int main() {
-	//print_version();
-	
-
-	auto start = chrono::high_resolution_clock::now();
+  // print_version();
+  auto start = chrono::high_resolution_clock::now();
 
   StartAnalysisOverCamera();
-	//ExtractDescriptors();
+  // ExtractDescriptors();
 
   auto end = chrono::high_resolution_clock::now();
-  chrono::duration<double> diff = end-start;
-	cout << "Turn around time : " <<  diff.count() <<  " seconds." << endl ;
+  chrono::duration<double> diff = end - start;
+  cout << "Turn around time : " << diff.count() << " seconds." << endl;
 
-	return 0;
+  return 0;
 }
