@@ -10,11 +10,12 @@
  */
 int main() {
 	//print_version();
-	//StartAnalysisOverCamera();
+	
 
 	auto start = chrono::high_resolution_clock::now();
 
-	ExtractDescriptors();
+  StartAnalysisOverCamera();
+	//ExtractDescriptors();
 
   auto end = chrono::high_resolution_clock::now();
   chrono::duration<double> diff = end-start;
