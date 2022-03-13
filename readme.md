@@ -4,14 +4,6 @@
 This is a software that track custom images, in the video shown below the custom image is a face but can track the custom image that you desire. 
 
 
-
-Video
-=====
-<p align="center">
-    <a href="https://www.youtube.com/watch?v=f_zgowqGhd0" target="_blank"><img src="assets/thumbnail_video.png" alt="Youtube Video" width="394" height="218" border="2" /></a>
-</p>
-
-
 How to use it?
 =============
 
@@ -39,22 +31,8 @@ Some examples
 
 <img src="assets/detect_movement.png"  />
 
-
-#### Track custom image
-
-<img src="assets/track-custom-image.png"  />
-
-
-#### Track features
-<img src="assets/track-those-features.png"  />
-
-
-Author
-=====
-
-* Name : Daniel Santos
-* Email : dfsantosbu@unal.edu.co
-* Web : https://danielsantos.net
+#### Track custom image (take a photo of you and the camera will track you)
+#### Track features (take a photo of you and the camera will track you)
 
 License
 =======
